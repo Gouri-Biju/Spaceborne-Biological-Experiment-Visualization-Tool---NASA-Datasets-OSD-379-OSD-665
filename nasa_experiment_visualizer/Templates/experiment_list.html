@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>NASA Space Biological Experiments</title>
+    <style>
+        .top-container {
+            height: 50vh; /* Top half of the viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        .top-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading-message {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+    <script>
+        function showLoading(event) {
+            // Show the loading message
+            document.getElementById('loading').style.display = 'flex';
+
+            // Prevent form submission immediately
+            event.preventDefault();
+
+            // Set a timeout for 20 seconds (20000 milliseconds)
+            setTimeout(function() {
+                // Submit the form after the timeout
+                document.getElementById('experimentForm').submit();
+            }, 20000); // 20000 milliseconds = 20 seconds
+        }
+    </script>
+</head>
+<body>
+    <!-- Top half with an image -->
+    <div class="top-container">
+         <img src="{% static 'home.jpgcd' %}" alt="Sample Image"> <!-- Replace the source with your desired image URL -->
+    </div>
+
+    <!-- Form container -->
+    <div class="container mt-5">
+        <h1 class="text-center">NASA Space Biological Experiments</h1>
+
+        <form id="experimentForm" action="{% url 'experiment_create' %}" method="POST" enctype="multipart/form-data" onsubmit="showLoading(event);">
+        {% csrf_token %}
+            <table class="table table-bordered mt-4">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>File</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" name="experiment_id" class="form-control" required>  <!-- Unique ID input -->
+                        </td>
+                        <td>
+                            <input type="text" name="experiment_name" class="form-control" required>  <!-- Experiment name input -->
+                        </td>
+                        <td>
+                            <input type="file" name="experiment_file" class="form-control" accept=".txt,.csv,.json" required>  <!-- File input -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Loading screen -->
+    <div class="loading" id="loading">
+        <div class="loading-message">Evaluating... Please wait.</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
